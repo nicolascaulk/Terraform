@@ -1,0 +1,86 @@
+# Name: IR Srvr 2019 AD-DNS-DHCP
+# Version: 1.2
+# Date: 10/27/2024
+# Author: Nicolas Caulk
+# Description: Creates a Windows Srvr for the CCDC Regional IR
+provider "vsphere" {
+  user           = "caulk"
+  password       = "Zachnick70$$"
+  vsphere_server = "10.60.90.14"
+  allow_unverified_ssl = true
+}
+
+data "vsphere_datacenter" "dc" {
+  name = "TCW-Datacenter"
+}
+
+data "vsphere_datastore" "datastore" {
+  name          = "vm-storage"
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+data "vsphere_resource_pool" "parent-pool" {
+  name          = "Networking (Net-Not-Working)" # Update Resource Pool
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+data "vsphere_resource_pool" "child-pool" {
+  name          = "IR-Deploy VMs" # Update Resource Pool
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+data "vsphere_host" "host" {
+  name          = "tcw-compute2.ccdc.local"
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+data "vsphere_network" "network" {
+  name          = "VM Network"
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+data "vsphere_virtual_machine" "source_vm" {
+  name          = "TMPLT-WIN-SRVR-2019" # Name of template
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+resource "vsphere_virtual_machine" "vm" {
+  name             = "VM_test" # Name of VM
+  resource_pool_id = data.vsphere_resource_pool.child-pool.id
+  datastore_id     = data.vsphere_datastore.datastore.id
+
+  num_cpus = data.vsphere_virtual_machine.source_vm.num_cpus
+  memory   = data.vsphere_virtual_machine.source_vm.memory
+  guest_id = "windows9Server64Guest" 
+
+  network_interface {
+    network_id   = data.vsphere_network.network.id
+    adapter_type = "e1000e"
+  }
+
+  disk {
+    label            = "Hard disk 1"
+    size             = data.vsphere_virtual_machine.source_vm.disks.0.size
+    eagerly_scrub    = false
+    thin_provisioned = true
+  }
+
+  clone {
+    template_uuid = data.vsphere_virtual_machine.source_vm.id
+
+    customize {
+      windows_options {
+        computer_name = "administrator"  # Does not like underscores
+        workgroup     = "ccdc.local"
+      }
+
+      network_interface { 
+        ipv4_address = "10.60.102.20" # Change 
+        ipv4_netmask = 16
+      }
+
+      ipv4_gateway = "10.60.1.1"
+      dns_server_list = ["10.60.90.10", "1.1.1.1"]
+    }
+  }
+}
