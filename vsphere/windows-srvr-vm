@@ -4,8 +4,8 @@
 # Author: Nicolas Caulk
 # Description: Creates a Windows Srvr for the CCDC Regional IR
 provider "vsphere" {
-  user           = "caulk"
-  password       = "Zachnick70$$"
+  user           = "username"
+  password       = "password"
   vsphere_server = "10.60.90.14"
   allow_unverified_ssl = true
 }
