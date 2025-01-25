@@ -53,7 +53,6 @@ resource "vsphere_virtual_machine" "vm" {
 
   num_cpus = data.vsphere_virtual_machine.source_vm.num_cpus
   memory   = data.vsphere_virtual_machine.source_vm.memory
-  guest_id = "other3xLinux64Guest"  # General Linux guest ID
 
   network_interface {
     network_id   = data.vsphere_network.network.id
