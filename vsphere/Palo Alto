@@ -40,9 +40,9 @@ data "vsphere_network" "network" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-# Reference the Palo Alto firewall template
+# Reference the Palo Alto firewall template "Nics Test"
 data "vsphere_virtual_machine" "source_vm" {
-  name          = "PA-VM-ESX-11.0.0" # Name of Palo Alto firewall template
+  name          = "Nics Test" # Name of Palo Alto firewall template
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
@@ -53,6 +53,7 @@ resource "vsphere_virtual_machine" "vm" {
 
   num_cpus = data.vsphere_virtual_machine.source_vm.num_cpus
   memory   = data.vsphere_virtual_machine.source_vm.memory
+  guest_id = "other64Guest"  # Use a generic guest ID for network appliances
 
   network_interface {
     network_id   = data.vsphere_network.network.id
