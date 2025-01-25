@@ -2,7 +2,7 @@
 # Version: 1.0
 # Date: 1/25/2025
 # Author: Nicolas Caulk
-# Description: Creates a Palo Alto firewall VM clone
+# Description: Creates a Palo Alto firewall VM clone with Linux options
 
 provider "vsphere" {
   user                 = "caulk"
@@ -53,7 +53,7 @@ resource "vsphere_virtual_machine" "vm" {
 
   num_cpus = data.vsphere_virtual_machine.source_vm.num_cpus
   memory   = data.vsphere_virtual_machine.source_vm.memory
-  guest_id = "other64Guest"  # Use a generic guest ID for network appliances
+  guest_id = "linux64Guest"  # Use a generic Linux guest ID for network appliances
 
   network_interface {
     network_id   = data.vsphere_network.network.id
@@ -71,7 +71,11 @@ resource "vsphere_virtual_machine" "vm" {
     template_uuid = data.vsphere_virtual_machine.source_vm.id
 
     customize {
-      # Customize the Palo Alto firewall clone as needed
+      linux_options {
+        host_name = "Nics-PA"  # Set a valid hostname for the clone
+        domain    = "ccdc.local" # Set domain
+      }
+
       network_interface {
         ipv4_address = "10.60.102.200" # Change IP address
         ipv4_netmask = 16
