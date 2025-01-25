@@ -1,8 +1,8 @@
-# Name: IR Srvr 2019 AD-DNS-DHCP
-# Version: 1.2
-# Date: 10/27/2024
+# Name: Palo Alto
+# Version: 1.0
+# Date: 1/25/2025
 # Author: Nicolas Caulk
-# Description: Creates a Windows Srvr for the CCDC Regional IR
+# Description: Creates a Palo Alto because I need it
 provider "vsphere" {
   user           = "username"
   password       = "password"
