@@ -1,0 +1,84 @@
+# Name: Palo Alto Firewall Clone
+# Version: 1.0
+# Date: 1/25/2025
+# Author: Nicolas Caulk
+# Description: Creates a Palo Alto firewall VM clone
+
+provider "vsphere" {
+  user                 = "username"
+  password             = "password"
+  vsphere_server       = "10.60.90.14"
+  allow_unverified_ssl = true
+}
+
+data "vsphere_datacenter" "dc" {
+  name = "TCW-Datacenter"
+}
+
+data "vsphere_datastore" "datastore" {
+  name          = "vm-storage"
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+data "vsphere_resource_pool" "parent-pool" {
+  name          = "Networking (Net-Not-Working)" # Update Resource Pool
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+data "vsphere_resource_pool" "child-pool" {
+  name          = "IR-Deploy VMs" # Update Resource Pool
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+data "vsphere_host" "host" {
+  name          = "tcw-compute2.ccdc.local"
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+data "vsphere_network" "network" {
+  name          = "VM Network"
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+# Reference the Palo Alto firewall template
+data "vsphere_virtual_machine" "source_vm" {
+  name          = "PA-VM-ESX-11.0.0" # Name of Palo Alto firewall template
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+resource "vsphere_virtual_machine" "vm" {
+  name             = "Nics PA_Test" # Name of Palo Alto firewall VM
+  resource_pool_id = data.vsphere_resource_pool.child-pool.id
+  datastore_id     = data.vsphere_datastore.datastore.id
+
+  num_cpus = data.vsphere_virtual_machine.source_vm.num_cpus
+  memory   = data.vsphere_virtual_machine.source_vm.memory
+  guest_id = "other3xLinux64Guest"  # Use a generic guest ID, adjust based on your Palo Alto firewall OS
+
+  network_interface {
+    network_id   = data.vsphere_network.network.id
+    adapter_type = "e1000e"
+  }
+
+  disk {
+    label            = "Hard disk 1"
+    size             = data.vsphere_virtual_machine.source_vm.disks.0.size
+    eagerly_scrub    = false
+    thin_provisioned = true
+  }
+
+  clone {
+    template_uuid = data.vsphere_virtual_machine.source_vm.id
+
+    customize {
+      # Customize the Palo Alto firewall clone as needed
+      network_interface {
+        ipv4_address = "10.60.102.200" # Change IP address
+        ipv4_netmask = 16
+      }
+
+      ipv4_gateway = "10.60.1.1"
+      dns_server_list = ["10.60.90.10", "1.1.1.1"]
+    }
+  }
+}
