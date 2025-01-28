@@ -5,8 +5,8 @@
 # Description: Creates a Palo Alto firewall VM clone with Linux options
 
 provider "vsphere" {
-  user                 = "caulk"
-  password             = "Zachnick70$$"
+  user                 = "username"
+  password             = "password"
   vsphere_server       = "tcw-vcenter.ccdc.local"
   allow_unverified_ssl = true
 }
