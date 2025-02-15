@@ -6,7 +6,7 @@
 provider "vsphere" {
   user           = "username"
   password       = "password"
-  vsphere_server = "10.60.90.14"
+  vsphere_server = "tcw-vcenter.ccdc.local"
   allow_unverified_ssl = true
 }
 
