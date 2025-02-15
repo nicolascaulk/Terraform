@@ -2,10 +2,11 @@
 # Version: 1.0
 # Date: 10/24/2024
 # Author: Nicolas Caulk
+
 provider "vsphere" {
-  user           = "username"
-  password       = "password"
-  vsphere_server = "tcw-vcenter.ccdc.local"
+  user                 = "username"
+  password             = "password"
+  vsphere_server       = "tcw-vcenter.ccdc.local"
   allow_unverified_ssl = true
 }
 
@@ -78,9 +79,10 @@ resource "vsphere_virtual_machine" "vm" {
         ipv4_netmask = 24
       }
 
-      ipv4_gateway = "<gateway ip>"
+      ipv4_gateway   = "10.60.1.1"
       dns_server_list = ["1.0.0.1", "1.1.1.1"]
     }
   }
+
+  wait_for_guest_net_timeout = -1
 }
-# Description: Creates a Ubuntu 20 VM
