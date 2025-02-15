@@ -2,11 +2,10 @@
 # Version: 1.0
 # Date: 10/24/2024
 # Author: Nicolas Caulk
-# Description: Creates a Ubuntu 20 VM
 provider "vsphere" {
-  user           = "Username"
-  password       = "Password"
-  vsphere_server = "10.60.90.14"
+  user           = "username"
+  password       = "password"
+  vsphere_server = "tcw-vcenter.ccdc.local"
   allow_unverified_ssl = true
 }
 
@@ -45,7 +44,7 @@ data "vsphere_virtual_machine" "source_vm" {
 }
 
 resource "vsphere_virtual_machine" "vm" {
-  name             = "Ubuntu" # Name of VM
+  name             = "Ubuntu-test" # Name of VM
   resource_pool_id = data.vsphere_resource_pool.child-pool.id
   datastore_id     = data.vsphere_datastore.datastore.id
 
@@ -75,8 +74,8 @@ resource "vsphere_virtual_machine" "vm" {
       }
 
       network_interface { 
-        ipv4_address = "<ip address>" # Change 
-        ipv4_netmask = <netmask>
+        ipv4_address = "10.60.102.32" # Change 
+        ipv4_netmask = 24
       }
 
       ipv4_gateway = "<gateway ip>"
@@ -84,3 +83,4 @@ resource "vsphere_virtual_machine" "vm" {
     }
   }
 }
+# Description: Creates a Ubuntu 20 VM
