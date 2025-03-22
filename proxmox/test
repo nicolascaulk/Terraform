@@ -22,3 +22,16 @@ resource "proxmox_bm_qemu" "vm-instance" {
     memory   = data.proxmox_vm.source_vm.memory
     socket   = data.proxmox_vm.source_vm.socket
     disk     = data.proxmox_vm.source_vm.disk
+
+    clone {
+      source_vm = data.proxmox_vm.source.vmid             
+    }
+
+network {
+  model   = "VMware vmxnet3"
+  bridge  = "vmbr0"
+  ip      = "10.60.102.35"
+  gateway = "10.60.1.1"
+ }
+}
+  
