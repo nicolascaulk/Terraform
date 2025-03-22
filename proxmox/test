@@ -1,1 +1,24 @@
-terraform
+terraform {
+    required_providers {
+        proxmox = {
+            source = "(tbd)"
+        }
+    }
+}
+
+provider "proxmox" {
+    pm_api_url          = "https://10.60.4.10:8006/"
+    pm_api_token_id     = ""
+    pm_api_token_secret = ""
+    pm_tls_insecure     = true
+}
+
+resource "proxmox_bm_qemu" "vm-instance" {
+    name                = "TM-Caulk-Test"
+    target_node         = "proxmox1"
+    clone               = "TMPLT-LIN-UBUNTU-WKST-20.04"
+    full_clone          = true
+    cores    = data.proxmox_vm.source_vm.cores
+    memory   = data.proxmox_vm.source_vm.memory
+    socket   = data.proxmox_vm.source_vm.socket
+    disk     = data.proxmox_vm.source_vm.disk
