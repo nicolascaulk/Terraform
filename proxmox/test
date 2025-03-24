@@ -7,30 +7,22 @@ terraform {
 }
 provider "proxmox" {
     pm_api_url          = "https://10.60.4.10:8006/"
-    pm_api_token_id     = "vsauto"
-    pm_api_token_secret = "d49551fc-e703-49d0-bc81-8c48c4a5d262"
+    pm_api_token_id     = ""
+    pm_api_token_secret = ""
     pm_tls_insecure     = true
 }
 
-resource "proxmox_bm_qemu" "vm-instance" {
+resource "proxmox_vm_qemu" "vm-instance" {
     name                = "TM-Caulk-Test"
     target_node         = "proxmox1"
     clone               = "TMPLT-LIN-UBUNTU-WKST-20.04"
     full_clone          = true
-    cores    = data.proxmox_vm.source_vm.cores
-    memory   = data.proxmox_vm.source_vm.memory
-    socket   = data.proxmox_vm.source_vm.socket
-    disk     = data.proxmox_vm.source_vm.disk
-
-    clone {
-      source_vm = data.proxmox_vm.source.vmid             
-    }
-
+    cores    = 1
+    memory   = 4096
+    sockets  = 1
 network {
   model   = "VMware vmxnet3"
   bridge  = "vmbr0"
-  ip      = "10.60.102.35"
-  gateway = "10.60.1.1"
- }
+  }
 }
   
