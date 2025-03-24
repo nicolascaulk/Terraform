@@ -7,8 +7,8 @@ terraform {
 }
 provider "proxmox" {
     pm_api_url          = "https://10.60.4.10:8006/"
-    pm_api_token_id     = ""
-    pm_api_token_secret = ""
+    pm_api_token_id     = "caulk@ccdc.local!vsauto"
+    pm_api_token_secret = "33880813-2450-4a30-bdd3-cdcb8209aa15"
     pm_tls_insecure     = true
 }
 
