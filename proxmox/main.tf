@@ -1,0 +1,56 @@
+terraform {
+  required_providers {
+    proxmox = {
+      source = "telmate/proxmox"
+      version = "2.7.4"
+    }
+   }
+  }
+
+  provider "proxmox" {
+    pm_api_url = "https://10.60.4.10:8006/api2/json"
+    pm_api_token_id = "caulk@ccdc.local!new_token_id"
+    pm_api_token_secret = "43be9a84-ea67-4a8e-b599-c2fc075cb227"
+    pm_tls_insecure = true
+  }
+
+  resource "proxmox_vm_qemu" "proxmox1"
+    count = 1
+    name + "test-vm-${count.index + 1}"
+ 
+    target_node = var.proxmox_host
+    clone = var.template_name
+    
+    agent = 1
+    os_type = "Other"
+    cores = 1
+    sockets = 2
+    cpu = "host"
+    memory = 2048
+    scsihq = "virtio-scsi-pci"
+    bootdisk = "scsi0"
+
+    disk {
+      slot = 0
+      size = "20G"
+      type = "sata0"
+      storage = "local-zfs"
+      iotheread = 1
+    }
+
+    network {
+      model = "vmxnet3"
+      bridge = "vmbr0"
+
+    lifecycle {
+      ignore_changes = [
+        network,
+      ]
+    }
+
+    ipconfig0 = "ip=10.60.102.1${count.index + 1}/24,gw=10.60.1.1
+
+    ssh = <<EOF
+    ${var.ssh_key}
+    EOF
+   }
