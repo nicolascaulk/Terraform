@@ -1,49 +1,10 @@
-proxmox_vm_qemu.test_server[0]: Refreshing state... [id=proxmox1/qemu/373]
-╷
-│ Error: Plugin did not respond
-│ 
-│   with proxmox_vm_qemu.test_server[0],
-│   on main.tf line 18, in resource "proxmox_vm_qemu" "test_server":
-│   18: resource "proxmox_vm_qemu" "test_server" {
-│ 
-│ The plugin encountered an error, and failed to respond to the
-│ plugin.(*GRPCProvider).ReadResource call. The plugin logs may contain more
-│ details.
-╵
 
-Stack trace from the terraform-provider-proxmox_v2.9.10 plugin:
-
-panic: interface conversion: interface {} is string, not float64
-
-goroutine 24 [running]:
-github.com/Telmate/proxmox-api-go/proxmox.NewConfigQemuFromApi(0xc000131210, 0xc000131210)
-	github.com/Telmate/proxmox-api-go@v0.0.0-20220427175411-e25c3463f0db/proxmox/config_qemu.go:569 +0x46a5
-github.com/Telmate/terraform-provider-proxmox/proxmox._resourceVmQemuRead(0xc0004abb80, {0xae93c0, 0xc0004b40f0})
-	github.com/Telmate/terraform-provider-proxmox/proxmox/resource_vm_qemu.go:1333 +0x39e
-github.com/Telmate/terraform-provider-proxmox/proxmox.resourceVmQemuRead(0x68, {0xae93c0, 0xc0004b40f0})
-	github.com/Telmate/terraform-provider-proxmox/proxmox/resource_vm_qemu.go:1305 +0x25
-github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema.(*Resource).read(0xd1df00, {0xd1df00, 0xc000632960}, 0xd, {0xae93c0, 0xc0004b40f0})
-	github.com/hashicorp/terraform-plugin-sdk/v2@v2.14.0/helper/schema/resource.go:712 +0x178
-github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema.(*Resource).RefreshWithoutUpgrade(0xc0003de700, {0xd1df00, 0xc000632960}, 0xc000495450, {0xae93c0, 0xc0004b40f0})
-	github.com/hashicorp/terraform-plugin-sdk/v2@v2.14.0/helper/schema/resource.go:1015 +0x585
-github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema.(*GRPCProviderServer).ReadResource(0xc000315158, {0xd1de58, 0xc00019d480}, 0xc00019d500)
-	github.com/hashicorp/terraform-plugin-sdk/v2@v2.14.0/helper/schema/grpc_provider.go:613 +0x574
-github.com/hashicorp/terraform-plugin-go/tfprotov5/tf5server.(*server).ReadResource(0xc000372320, {0xd1df00, 0xc0006321b0}, 0xc0005f91a0)
-	github.com/hashicorp/terraform-plugin-go@v0.9.0/tfprotov5/tf5server/server.go:746 +0x48c
-github.com/hashicorp/terraform-plugin-go/tfprotov5/internal/tfplugin5._Provider_ReadResource_Handler({0xbe2c80, 0xc000372320}, {0xd1df00, 0xc0006321b0}, 0xc0005f9140, 0x0)
-	github.com/hashicorp/terraform-plugin-go@v0.9.0/tfprotov5/internal/tfplugin5/tfplugin5_grpc.pb.go:349 +0x170
-google.golang.org/grpc.(*Server).processUnaryRPC(0xc00032c700, {0xd2b6c0, 0xc0000016c0}, 0xc00049b200, 0xc0003fcbd0, 0x120cf70, 0x0)
-	google.golang.org/grpc@v1.46.0/server.go:1283 +0xcf2
-google.golang.org/grpc.(*Server).handleStream(0xc00032c700, {0xd2b6c0, 0xc0000016c0}, 0xc00049b200, 0x0)
-	google.golang.org/grpc@v1.46.0/server.go:1620 +0xa2a
-google.golang.org/grpc.(*Server).serveStreams.func1.2()
-	google.golang.org/grpc@v1.46.0/server.go:922 +0x98
-created by google.golang.org/grpc.(*Server).serveStreams.func1
-	google.golang.org/grpc@v1.46.0/server.go:920 +0x294
-
-Error: The terraform-provider-proxmox_v2.9.10 plugin crashed!
-
-This is always indicative of a bug within the plugin. It would be immensely
-helpful if you could report the crash with the plugin's maintainers so that it
-can be fixed. The output above should help diagnose the issue.
-
+terraform {
+  required_providers {
+    proxmox = { 
+      source  = "Telmate/proxmox"
+      version = "3.0.1-rc3"
+    }
+  }
+  required_version = ">= 1.0.0"
+}
