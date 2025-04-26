@@ -1,6 +1,6 @@
 terraform {
   required_providers {
-    proxmox = { 
+    proxmox = {
       source  = "Telmate/proxmox"
       version = "3.0.1-rc3"
     }
@@ -10,8 +10,8 @@ terraform {
 
 provider "proxmox" {
   pm_api_url      = "https://10.60.4.10:8006/api2/json"
-  pm_user         = "caulk@ccdc.local"
-  pm_password     = "Zachnick70$$"
+  pm_user         = var.pm_user
+  pm_password     = var.pm_password
   pm_tls_insecure = true
 }
 
@@ -49,9 +49,7 @@ resource "proxmox_vm_qemu" "test_server" {
     ]
   }
 
-  ipconfig0 = "ip=10.60.102.1${count.index + 1}/24,gw=10.60.1.1"
+  ipconfig0 = "ip=10.60.102.${count.index + 11}/24,gw=10.60.1.1"
 
-  sshkeys = <<EOF
-  ${var.ssh_key}
-  EOF
+  sshkeys = var.ssh_key
 }
