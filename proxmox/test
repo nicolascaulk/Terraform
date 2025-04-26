@@ -2,16 +2,16 @@ terraform {
   required_providers {
     proxmox = {
       source  = "telmate/proxmox"
-      version = "2.7.4"
+      version = "2.9.10"
     }
   }
 }
 
 provider "proxmox" {
-  pm_api_url          = "https://10.60.4.10:8006/api2/json"
-  pm_api_token_id     = "caulk@ccdc.local!new_token_id"
-  pm_api_token_secret = "43be9a84-ea67-4a8e-b599-c2fc075cb227"
-  pm_tls_insecure     = true
+  pm_api_url      = "https://10.60.4.10:8006/api2/json"
+  pm_user         = "caulk@ccdc.local"
+  pm_password     = "Zachnick70$$"
+  pm_tls_insecure = true
 }
 
 resource "proxmox_vm_qemu" "proxmox1" {
@@ -30,10 +30,10 @@ resource "proxmox_vm_qemu" "proxmox1" {
   bootdisk  = "scsi0"
 
   disk {
-    slot    = 0
-    size    = "20G"
-    type    = "scsi"
-    storage = "local-zfs"
+    slot     = 0
+    size     = "20G"
+    type     = "scsi"
+    storage  = "local-zfs"
     iothread = 1
   }
 
