@@ -60,13 +60,13 @@ terraform {
 }
 
 provider "proxmox" {
-  endpoint = "https://10.60.4.10:8006/api2/json"
-  username = "caulk@ccdc.local"
-  password = "Zachnick70$$"
-  insecure = true
+  endpoint     = "https://10.60.4.10:8006/api2/json"
+  username     = "caulk@ccdc.local"
+  password     = "Zachnick70$$"
+  insecure     = true
 }
 
-resource "proxmox_virtual_environment_vm" "test_server" {
+resource "proxmox_vm_qemu" "test_server" {
   count       = 1
   name        = "test-vm-${count.index + 1}"
   target_node = var.proxmox_host
