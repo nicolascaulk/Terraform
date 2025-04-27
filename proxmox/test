@@ -29,10 +29,7 @@ resource "proxmox_vm_qemu" "test_server" {
   memory    = 2048
   scsihw    = "virtio-scsi-pci"
   bootdisk  = "scsi0"
-  scsihw    = "virtio-scsi-pci"
-  bootdisk  = "scsi0"
   scsi0     = "VM_Storage:20"
-
 
   network {
     model  = "vmxnet3"
