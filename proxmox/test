@@ -48,3 +48,64 @@ resource "proxmox_vm_qemu" "test_server" {
   ${var.ssh_key}
   EOF
 }
+-
+terraform {
+  required_providers {
+    proxmox = {
+      source  = "bpg/proxmox"
+      version = ">=0.38.1"
+    }
+  }
+  required_version = ">= 1.0.0"
+}
+
+provider "proxmox" {
+  endpoint     = "https://10.60.4.10:8006/api2/json"
+  username     = "caulk@ccdc.local"
+  password     = "Zachnick70$$"
+  insecure     = true
+}
+
+resource "proxmox_vm_qemu" "test_server" {
+  count       = 1
+  name        = "test-vm-${count.index + 1}"
+  target_node = var.proxmox_host
+  clone       = var.template_name
+
+  agent     = true
+  os_type   = "other"
+  cores     = 1
+  sockets   = 2
+  cpu       = "host"
+  memory    = 2048
+  scsihw    = "virtio-scsi-pci"
+  bootdisk  = "scsi0"
+
+  disk {
+    size     = "20G"
+    type     = "scsi"
+    storage  = "VM_Storage"
+    iothread = true
+    slot     = 0
+  }
+
+  network {
+    model  = "vmxnet3"
+    bridge = "vmbr0"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      network,
+    ]
+  }
+
+  ipconfig {
+    ipv4 = {
+      address = "10.60.102.${count.index + 1}/24"
+      gateway = "10.60.1.1"
+    }
+  }
+
+  ssh_key = var.ssh_key
+}
