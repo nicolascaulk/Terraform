@@ -1,3 +1,20 @@
+terraform {
+  required_providers {
+    proxmox = {
+      source  = "telmate/proxmox"
+      version = "3.0.1-rc3"
+    }
+  }
+  required_version = ">= 1.0.0"
+}
+
+provider "proxmox" {
+  pm_api_url      = "https://10.60.4.10:8006/api2/json"
+  pm_user         = "caulk@ccdc.local"
+  pm_password     = "Zachnick70$$"
+  pm_tls_insecure = true
+}
+
 resource "proxmox_vm_qemu" "test_server" {
   count       = 1
   name        = "test-vm-${count.index + 1}"
