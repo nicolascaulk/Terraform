@@ -10,8 +10,8 @@ terraform {
 
 provider "proxmox" {
   pm_api_url      = "https://10.60.4.10:8006/api2/json"
-  pm_user         = "caulk@ccdc.local"
-  pm_password     = "Zachnick70$$"
+  pm_user         = "Username"
+  pm_password     = "Password"
   pm_tls_insecure = true
 }
 
